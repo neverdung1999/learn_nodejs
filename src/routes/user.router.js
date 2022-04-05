@@ -1,17 +1,20 @@
-const express = require('express');
 const UserController = require('../app/controllers/UserController');
-const router = express.Router();
 const { storage } = require('../utils/uploadFile');
 const multer = require('multer');
-const jwt_helper = require('../helpers/jwt_helper');
+const { customRouter } = require('../helpers/routerHelper');
+const express = require('express');
+const router = express.Router();
 
 //Config Upload
 const upload = multer({ storage: storage });
 
-router.post(
-  '/profile',
-  [jwt_helper.verifyAccessToken, upload.single('avatar')],
-  UserController.profile
-);
+// router.post(
+//   '/profile',
+//   [jwt_helper.verifyAccessToken, upload.single('avatar')],
+//   UserController.update
+// );
+
+customRouter(router, 'post', '/profile', UserController.update, [upload.single('avatar')]);
+customRouter(router, 'get', '/profile/:id', UserController.profile);
 
 module.exports = router;

@@ -6,7 +6,6 @@ require('dotenv').config();
 const db = require('./config/db');
 const route = require('./routes');
 
-
 const app = express();
 const port = 8888;
 
