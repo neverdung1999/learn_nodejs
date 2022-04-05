@@ -1,4 +1,4 @@
-const User = require('../models/me.models');
+const User = require('../models/user.models');
 
 class MeController {
   // [POST] /me/profile
@@ -8,7 +8,7 @@ class MeController {
     const data = req.body;
     data['avatar'] = req.file.path;
     // console.log(data);
-    User.findOne({phone: data.phone})
+    User.findOne({ phone: data.phone })
       .then((usr) => {
         console.log(usr);
         // if(!usr)

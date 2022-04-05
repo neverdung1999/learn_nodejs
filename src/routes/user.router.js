@@ -1,5 +1,5 @@
 const express = require('express');
-const MeController = require('../app/controllers/MeController');
+const UserController = require('../app/controllers/UserController');
 const router = express.Router();
 const { storage } = require('../utils/uploadFile');
 const multer = require('multer');
@@ -11,7 +11,7 @@ const upload = multer({ storage: storage });
 router.post(
   '/profile',
   [jwt_helper.verifyAccessToken, upload.single('avatar')],
-  MeController.profile
+  UserController.profile
 );
 
 module.exports = router;

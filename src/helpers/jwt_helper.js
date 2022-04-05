@@ -1,6 +1,4 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
-
 class Jwt_helper {
   signAccessToken(password) {
     return jwt.sign({ password: password }, process.env.ACCESS_TOKEN_SECRET, {
