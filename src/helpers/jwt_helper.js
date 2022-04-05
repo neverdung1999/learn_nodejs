@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-
 class Jwt_helper {
   signAccessToken(password) {
     return jwt.sign({ password: password }, process.env.ACCESS_TOKEN_SECRET, {
