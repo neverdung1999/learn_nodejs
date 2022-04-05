@@ -11,8 +11,7 @@ class AuthController {
       const data = req.body;
       data['password'] = md5(data.password);
       const findUser = await Auth.find({ username: data.email });
-      if (findUser.length) return res.status(400).json({ message: 'User already exits!!!' });
-
+      if (findUser.length) return next(createError(400, 'User already exits!!!'));
       const createUser = await Auth.create(data);
       if (!createUser) return res.status(400).json({ message: 'register failure!!!' });
 
