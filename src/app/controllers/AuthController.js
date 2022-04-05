@@ -5,20 +5,21 @@ const Jwt_helper = require('../../helpers/jwt_helper');
 
 class UserController {
   // [POST] /auth/register
-  register(req, res, next) {
-    const data = req.body;
+  async register(req, res, next) {
+    try{
+      const data = req.body;
     data['password'] = md5(data.password);
-    Auth.findOne({ username: data.username })
-      .then((usr) => {
-        if (usr) return res.status(400).json({ message: 'User already exits!!!' });
-        Auth.create(data)
-          .then((usr) => {
-            if (!usr) return res.status(400).json({ message: 'register failure!!!' });
-            res.send('Register successfully!!!');
-          })
-          .catch(next);
-      })
-      .catch(next);
+    const findUser = await Auth.findOne({ username: data.username })
+    if (usr) return res.status(400).json({ message: 'User already exits!!!' });
+    const createUser = await Auth.create(data);
+    if(createUser){
+      return res.send('Register successfully!!!');
+    }else{
+      return res.status(400).json({ message: 'register failure!!!' });
+    }
+    }catch(error){
+      next(error);
+    }
   }
 
   // [POST] /auth/login

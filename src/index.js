@@ -20,7 +20,7 @@ app.use('../public/uploads', express.static(path.join(__dirname, '../public/uplo
 
 app.use(express.json());
 
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
 
 //Connect to DB
 db.connect();
