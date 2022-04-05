@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const path = require('path');
 
 const db = require('./config/db');
+const { key1 } = require('./helpers');
 const route = require('./routes');
 
 const app = express();
