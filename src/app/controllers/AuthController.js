@@ -11,7 +11,7 @@ class AuthController {
       const data = req.body;
       data['password'] = md5(data.password);
       const findUser = await Auth.find({ username: data.email });
-      if (findUser.length) return next(createError(400, 'User already exits!!!'));
+      if (findUser.length) throw createError(400, 'User already exits!!!');
       const createUser = await Auth.create(data);
       if (!createUser) return res.status(400).json({ message: 'register failure!!!' });
 
@@ -41,7 +41,7 @@ class AuthController {
       if (user.password !== md5(password))
         return res.status(400).json({ message: 'Error password!!!' });
       // generate token
-      const token = Jwt_helper.signAccessToken(user.password);
+      const token = Jwt_helper.signAccessToken(user);
       res.send({ accessToken: token });
     } catch (error) {
       next(error);

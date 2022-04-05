@@ -1,9 +1,14 @@
 const jwt = require('jsonwebtoken');
+const User = require('../app/models/user.models');
 class Jwt_helper {
-  signAccessToken(password) {
-    return jwt.sign({ password: password }, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: '1d',
-    });
+  signAccessToken(user)  {
+    const payload = {password: user.password};
+      const secret = process.env.ACCESS_TOKEN_SECRET;
+      const options = {
+        expiresIn: '1d',
+        audience: [user._id], 
+      };
+      return jwt.sign({...payload}, secret, options);
   }
 
   verifyAccessToken(req, res, next) {
