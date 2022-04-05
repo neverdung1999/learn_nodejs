@@ -2,7 +2,7 @@ const Auth = require('../models/auth.models');
 const User = require('../models/user.models');
 const md5 = require('md5');
 const createError = require('http-errors');
-const Jwt_helper = require('../../helpers/jwt_helper');
+const { signAccessToken } = require('../../helpers/jwt_helper');
 
 class AuthController {
   // [POST] /auth/register
@@ -10,12 +10,10 @@ class AuthController {
     try {
       const data = req.body;
       data['password'] = md5(data.password);
-      const findUser = await Auth.find({ username: data.email });
-      if (findUser.length) throw createError(400, 'User already exits!!!');
+      const findUser = await Auth.find({ email: data.email });
+      if (findUser.length) return res.status(400).json({ message: 'User already exits!!!' });
       const createUser = await Auth.create(data);
       if (!createUser) return res.status(400).json({ message: 'register failure!!!' });
-
-      console.log(createUser);
 
       const updateUser = await User.create({
         userId: createUser._id,
@@ -41,7 +39,7 @@ class AuthController {
       if (user.password !== md5(password))
         return res.status(400).json({ message: 'Error password!!!' });
       // generate token
-      const token = Jwt_helper.signAccessToken(user);
+      const token = signAccessToken(user._id);
       res.send({ accessToken: token });
     } catch (error) {
       next(error);

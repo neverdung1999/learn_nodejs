@@ -1,14 +1,20 @@
 const jwt = require('jsonwebtoken');
-const User = require('../app/models/user.models');
+const createError = require('http-errors');
 class Jwt_helper {
-  signAccessToken(user)  {
-    const payload = {password: user.password};
+  signAccessToken(userId) {
+    try {
+      const payload = { id: userId };
       const secret = process.env.ACCESS_TOKEN_SECRET;
       const options = {
         expiresIn: '1d',
-        audience: [user._id], 
+        // issuer: 'pickurpage.com',
+        audience: [userId],
       };
-      return jwt.sign({...payload}, secret, options);
+      const token = jwt.sign({ ...payload }, secret, options);
+      return token;
+    } catch (error) {
+      throw createError(error);
+    }
   }
 
   verifyAccessToken(req, res, next) {
@@ -17,7 +23,6 @@ class Jwt_helper {
     const bearerToken = authHeader.split(' ');
     const token = bearerToken[1];
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
-      console.log({ err, payload });
       if (err) return res.status(401).json({ message: '2 - Unauthorized' });
       req.payload = payload;
       next();
