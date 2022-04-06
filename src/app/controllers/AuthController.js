@@ -2,7 +2,7 @@ const Auth = require('../models/auth.models');
 const User = require('../models/user.models');
 const md5 = require('md5');
 const createError = require('http-errors');
-const { signAccessToken } = require('../../helpers/jwt_helper');
+const jwt = require('../../helpers/jwt_helper');
 
 class AuthController {
   // [POST] /auth/register
@@ -39,8 +39,25 @@ class AuthController {
       if (user.password !== md5(password))
         return res.status(400).json({ message: 'Error password!!!' });
       // generate token
-      const token = signAccessToken(user._id);
-      res.send({ accessToken: token });
+      const accessToken = await jwt.signAccessToken(user._id);
+      const refreshToken = await jwt.signRefreshToken(user._id);
+      res.send({ accessToken: accessToken, refreshToken: refreshToken });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // [POST] /auth/refresh-toekn
+  async refreshToken(req, res, next) {
+    try {
+      const refreshToken = req.body.refreshToken;
+      if(!refreshToken) throw createError.BadRequest();
+
+      const userId = await jwt.verifyRefreshToken(refreshToken);
+
+      const accessTokenNew = await jwt.signAccessToken(userId);
+      const refreshTokenNew = await  jwt.signRefreshToken(userId);
+      res.send({ accessToken: accessTokenNew, refreshToken: refreshTokenNew });
     } catch (error) {
       next(error);
     }

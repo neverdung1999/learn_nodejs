@@ -8,12 +8,7 @@ const router = express.Router();
 //Config Upload
 const upload = multer({ storage: storage });
 
-// router.post(
-//   '/profile',
-//   [jwt_helper.verifyAccessToken, upload.single('avatar')],
-//   UserController.update
-// );
-
+//Router with middleware
 customRouter(router, 'post', '/profile', UserController.update, [upload.single('avatar')]);
 customRouter(router, 'get', '/profile/:id', UserController.profile);
 

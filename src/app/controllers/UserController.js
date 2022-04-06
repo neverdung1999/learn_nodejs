@@ -33,7 +33,9 @@ class MeController {
   async profile(req, res, next) {
     try {
       const idParam = req.params.id;
-      console.log({ idParam });
+      const user = await User.findOne({ userId: idParam },);
+      if(user) return res.send(user);
+      res.status(400).json({ message: 'Bad request' });
     } catch (error) {
       next(error);
     }

@@ -6,4 +6,8 @@ function customRouter(router, method, path, controller, middleware) {
   router[method](path, jwt_helper.verifyAccessToken, controller);
 }
 
-module.exports = { customRouter };
+function noneVerifyAccessTokenRouter(router, method, path, controller){
+  router[method](path, controller);
+}
+
+module.exports = { customRouter, noneVerifyAccessTokenRouter };
