@@ -56,39 +56,20 @@ class MeController {
       await client.connect();
       console.log('Connected successfully to server !!!!!!!!!!!!');
       const db = client.db('study_node_dev');
-
-      db.collection('authentications').aggregate([
-        {
-          $lookup: {
-            from: 'users',
-            localField: '_id',
-            foreignField: 'userId',
-            as: 'test',
+      const dataJoin = await db
+        .collection('users')
+        .aggregate([
+          {
+            $lookup: {
+              from: 'authentications',
+              foreignField: '_id',
+              localField: 'userId',
+              as: 'auth',
+            },
           },
-        },
-      ]);
-
-      // db.connect()
-      //   .then((res) => {
-      //     const col = res.db('authentications');
-      //     col.aggregate(
-      //       [
-      //         {
-      //           $lookup: {
-      //             from: 'users',
-      //             localField: 'userId',
-      //             foreignField: '_id',
-      //             as: 'join_auth_user',
-      //           },
-      //         },
-      //       ],
-      //       function (err, res) {
-      //         if (err) throw err;
-      //         console.log(res);
-      //       }
-      //     );
-      //   })
-      //   .catch(next);
+        ])
+        .toArray();
+      res.status(200).json(dataJoin[0]);
     } catch (error) {
       next(error);
     }

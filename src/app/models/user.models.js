@@ -8,7 +8,7 @@ const User = new Schema(
     phone: { type: String, default: '' },
     avatar: { type: String, default: null },
     email: { type: String, required: true },
-    userId: { type: String, required: true },
+    userId: { type: mongoose.Schema.ObjectId, required: true },
   },
   {
     timestamps: true,
