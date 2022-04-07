@@ -16,5 +16,6 @@ const upload = multer({ storage: storage });
 
 customRouter(router, 'post', '/profile', UserController.update, [upload.single('avatar')]);
 customRouter(router, 'get', '/profile/:id', UserController.profile);
+customRouter(router, 'post', '/test', UserController.test, [upload.array('image')]);
 
 module.exports = router;
