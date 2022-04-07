@@ -14,7 +14,6 @@ class AuthController {
       };
       const findUser = await Auth.find({ email: data.email });
       if (findUser.length) return res.status(400).json({ message: 'User already exits!!!' });
-
       const createUser = await Auth.create(data);
       if (!createUser) return res.status(400).json({ message: 'register failure!!!' });
 
